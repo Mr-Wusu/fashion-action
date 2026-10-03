@@ -1,0 +1,48 @@
+{
+  "name": "fashion",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0 -p 3001",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@prisma/adapter-pg": "^7.7.0",
+    "@prisma/client": "^7.7.0",
+    "@reduxjs/toolkit": "^2.11.2",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.9.0",
+    "jsonwebtoken": "^9.0.3",
+    "next": "^16.2.3",
+    "next-cloudinary": "^6.17.5",
+    "pg": "^8.20.0",
+    "prisma": "^7.7.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-hot-toast": "^2.6.0",
+    "react-icons": "^5.6.0",
+    "react-spinners": "^0.17.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
+    "@next/codemod": "^16.2.3",
+    "@types/bcryptjs": "^3.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.19.39",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "baseline-browser-mapping": "^2.10.18",
+    "dotenv": "^17.4.2",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "15.1.4",
+    "jscodeshift": "^17.3.0",
+    "postcss": "^8.5.9",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.9.3"
+  }
+}

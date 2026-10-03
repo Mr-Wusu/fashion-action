@@ -1,0 +1,81 @@
+import { checkUserPermission, getCurrentuser } from "@/lib/auth";
+import { getPrisma } from "@/lib/db";
+import { Role } from "@/types";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(req: NextRequest) {
+  try {
+    const { imageUrl, description } = await req.json();
+    // Check if there's a user behind the request
+    const userExists = await getCurrentuser();
+    if (!userExists)
+      return NextResponse.json(
+        {
+          error: "You are not authorized",
+        },
+        { status: 401 },
+      );
+    // Check that user has priviledge - Only for users, admin should add cloth and not suggest
+    const isAdmin = checkUserPermission(userExists, Role.TEST_ADMIN);
+    if (isAdmin)
+      return NextResponse.json(
+        {
+          error: "Conflicted interests! Suggestions are for users",
+        },
+        { status: 409 },
+      );
+    // Write suggestion to database
+    const suggestion = await getPrisma().suggestion.create({
+      data: {
+        imageUrl,
+        description,
+        userId: userExists.id,
+      },
+    });
+    return NextResponse.json({ suggestion });
+  } catch (error) {
+    console.error(`Suggestion error: ${error}`);
+    return NextResponse.json(
+      {
+        error: "Internal server error",
+      },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { id } = await req.json();
+    // Verify user is logged in and has rights
+    const user = await getCurrentuser();
+    if (!user)
+      return NextResponse.json(
+        {
+          error: "You are not authorized to perform this operation",
+        },
+        { status: 401 },
+      );
+    const hasRight = checkUserPermission(user, Role.TEST_ADMIN);
+    if (!hasRight)
+      return NextResponse.json(
+        {
+          error: "You are not authorized to perform this operation",
+        },
+        { status: 409 },
+      );
+    // Check if suggestion exists, if it does delete it
+    await getPrisma().suggestion.delete({
+      where: { id },
+    });
+    return NextResponse.json(
+      { message: "Suggestion deleted successfully!" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error(`Deletion error: ${error}`);
+    return NextResponse.json({
+      error: "Internal server error. Something went wrong!",
+    });
+  }
+}
